@@ -1,0 +1,143 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        String     @id @default(cuid())
+  nameAr    String
+  nameEn    String
+  slug      String     @unique
+  image     String?
+  sortOrder Int        @default(0)
+  parentId  String?
+  parent    Category?  @relation("SubCategories", fields: [parentId], references: [id])
+  children  Category[] @relation("SubCategories")
+  products  Product[]
+  createdAt DateTime   @default(now())
+
+  @@index([slug])
+}
+
+model Product {
+  id            String      @id @default(cuid())
+  nameAr        String
+  nameEn        String
+  slug          String      @unique
+  descriptionAr String?     @db.Text
+  descriptionEn String?     @db.Text
+  specsAr       String?     @db.Text
+  specsEn       String?     @db.Text
+  price         Decimal     @db.Decimal(10, 2)
+  salePrice     Decimal?    @db.Decimal(10, 2)
+  images        String[]    // Cloudinary URLs
+  inStock       Boolean     @default(true)
+  isBestSeller  Boolean     @default(false)
+  isNewArrival  Boolean     @default(false)
+  isFeatured    Boolean     @default(false)
+  metaTitleAr   String?
+  metaTitleEn   String?
+  metaDescAr    String?
+  metaDescEn    String?
+  categoryId    String
+  category      Category    @relation(fields: [categoryId], references: [id])
+  orderItems    OrderItem[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([isBestSeller])
+  @@index([isNewArrival])
+  @@index([isFeatured])
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique // e.g. SF-20250001
+  customerName    String
+  customerPhone   String
+  customerEmail   String?
+  city            String
+  address         String
+  notes           String?     @db.Text
+  deliveryMethod  String      // PICKUP | DELIVERY
+  deliveryFee     Decimal     @default(0) @db.Decimal(10, 2)
+  subtotal        Decimal     @db.Decimal(10, 2)
+  total           Decimal     @db.Decimal(10, 2)
+  status          OrderStatus @default(PENDING_PAYMENT)
+  receiptUrl      String?     // Cloudinary URL of uploaded bank receipt
+  transactionRef  String?
+  rejectionNote   String?     @db.Text
+  adminNote       String?     @db.Text
+  items           OrderItem[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([orderNumber])
+  @@index([customerPhone])
+  @@index([status])
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2) // price locked at time of order
+
+  @@index([orderId])
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAYMENT_SUBMITTED
+  PAYMENT_VERIFIED
+  PROCESSING
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+model Banner {
+  id        String    @id @default(cuid())
+  position  String    // HERO_1..5, PROMO_BANNER
+  titleAr   String?
+  titleEn   String?
+  subtitleAr String?
+  subtitleEn String?
+  imageUrl  String
+  ctaTextAr String?
+  ctaTextEn String?
+  ctaUrl    String?
+  isActive  Boolean   @default(true)
+  startsAt  DateTime?
+  endsAt    DateTime?
+  sortOrder Int       @default(0)
+  createdAt DateTime  @default(now())
+}
+
+// Key-value store for admin-configurable settings
+// Keys: BANK_NAME, BANK_IBAN, BANK_ACCOUNT_HOLDER, WHATSAPP_NUMBER,
+//       ANNOUNCEMENT_TEXT, STORE_OPEN, STORE_CLOSED_MESSAGE
+model Setting {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
+
+model DeliveryZone {
+  id        String  @id @default(cuid())
+  city      String  @unique
+  fee       Decimal @db.Decimal(10, 2)
+  isActive  Boolean @default(true)
+}
