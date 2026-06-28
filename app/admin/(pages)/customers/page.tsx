@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 export const metadata: Metadata = { title: "العملاء | Customers" };
 
 export default async function AdminCustomersPage() {
-  let customers = [];
+  let customers: any[] = [];
   try {
     // Group orders by phone to get a unique list of customers
     const orders = await prisma.order.groupBy({
@@ -44,7 +44,7 @@ export default async function AdminCustomersPage() {
                 </tr>
               </thead>
               <tbody>
-                {customers.map((c, i) => (
+                {customers.map((c: any, i: number) => (
                   <tr
                     key={i}
                     className="border-t hover:bg-[var(--bg-secondary)] transition-colors"

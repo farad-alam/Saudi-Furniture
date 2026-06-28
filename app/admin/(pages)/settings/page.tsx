@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 export const metadata: Metadata = { title: "الإعدادات | Settings" };
 
 export default async function AdminSettingsPage() {
-  let settings = [];
+  let settings: any[] = [];
   try {
     settings = await prisma.setting.findMany();
   } catch {}

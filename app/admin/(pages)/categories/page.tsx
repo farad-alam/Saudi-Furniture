@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 export const metadata: Metadata = { title: "الأقسام | Categories" };
 
 export default async function AdminCategoriesPage() {
-  let categories = [];
+  let categories: any[] = [];
   try {
     categories = await prisma.category.findMany({
       orderBy: { createdAt: "desc" },
@@ -44,7 +44,7 @@ export default async function AdminCategoriesPage() {
                 </tr>
               </thead>
               <tbody>
-                {categories.map((c) => (
+                {categories.map((c: any) => (
                   <tr
                     key={c.id}
                     className="border-t hover:bg-[var(--bg-secondary)] transition-colors"

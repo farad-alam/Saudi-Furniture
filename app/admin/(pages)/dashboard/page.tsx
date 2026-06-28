@@ -25,7 +25,7 @@ async function getStats() {
 
     return { totalOrders, pendingOrders, verifiedOrders, recentOrders, revenue: Number(revenue._sum.total ?? 0) };
   } catch {
-    return { totalOrders: 0, pendingOrders: 0, verifiedOrders: 0, recentOrders: [], revenue: 0 };
+    return { totalOrders: 0, pendingOrders: 0, verifiedOrders: 0, recentOrders: [] as any[], revenue: 0 };
   }
 }
 
@@ -107,7 +107,7 @@ export default async function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {stats.recentOrders.map((o, i) => {
+                {stats.recentOrders.map((o: any, i: number) => {
                   const s = STATUS_LABEL[o.status] ?? { label: o.status, cls: "status-pending" };
                   return (
                     <tr

@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 export const metadata: Metadata = { title: "البانرات | Banners" };
 
 export default async function AdminBannersPage() {
-  let banners = [];
+  let banners: any[] = [];
   try {
     banners = await prisma.banner.findMany({
       orderBy: { position: "asc" },
@@ -44,7 +44,7 @@ export default async function AdminBannersPage() {
                 </tr>
               </thead>
               <tbody>
-                {banners.map((b) => (
+                {banners.map((b: any) => (
                   <tr
                     key={b.id}
                     className="border-t hover:bg-[var(--bg-secondary)] transition-colors"

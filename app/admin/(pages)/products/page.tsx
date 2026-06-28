@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 export const metadata: Metadata = { title: "المنتجات | Products" };
 
 export default async function AdminProductsPage() {
-  let products = [];
+  let products: any[] = [];
   try {
     products = await prisma.product.findMany({
       orderBy: { createdAt: "desc" },
@@ -47,7 +47,7 @@ export default async function AdminProductsPage() {
                 </tr>
               </thead>
               <tbody>
-                {products.map((p) => (
+                {products.map((p: any) => (
                   <tr
                     key={p.id}
                     className="border-t hover:bg-[var(--bg-secondary)] transition-colors"

@@ -23,7 +23,7 @@ async function getOrders(status?: string) {
       orderBy: { createdAt: "desc" },
       take: 50,
     });
-  } catch { return []; }
+  } catch { return [] as any[]; }
 }
 
 export default async function AdminOrdersPage({
@@ -81,7 +81,7 @@ export default async function AdminOrdersPage({
                 </tr>
               </thead>
               <tbody>
-                {orders.map((o) => {
+                {orders.map((o: any) => {
                   const s = STATUS_LABEL[o.status] ?? { label: o.status, cls: "status-pending" };
                   return (
                     <tr

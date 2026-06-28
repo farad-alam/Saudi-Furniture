@@ -97,7 +97,7 @@ export default async function OrderDetailPage({
       >
         <h2 className="font-bold p-5 border-b" style={{ borderColor: "var(--border)" }}>المنتجات</h2>
         <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-          {order.items.map((item) => (
+          {order.items.map((item: any) => (
             <div key={item.id} className="flex items-center gap-4 p-4">
               <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0" style={{ background: "var(--color-sand)" }}>
                 {item.product.images[0] && (
