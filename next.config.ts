@@ -16,9 +16,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  experimental: {
-    turbo: {},
-  },
 };
 
 export default withNextIntl(nextConfig);
