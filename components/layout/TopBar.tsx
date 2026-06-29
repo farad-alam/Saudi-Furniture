@@ -2,13 +2,27 @@
 
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Phone, MessageCircle } from "lucide-react";
 
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "+000000000";
 
 export default function TopBar({ locale }: { locale: string }) {
   const t = useTranslations("topbar");
-  const isRTL = locale === "ar";
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  let targetPath = pathname;
+  if (locale === "en") {
+    targetPath = pathname.replace(/^\/en/, "") || "/";
+  } else {
+    targetPath = `/en${pathname === "/" ? "" : pathname}`;
+  }
+  
+  const searchString = searchParams.toString();
+  if (searchString) {
+    targetPath += `?${searchString}`;
+  }
 
   return (
     <div className="topbar">
@@ -44,7 +58,7 @@ export default function TopBar({ locale }: { locale: string }) {
           <span className="opacity-30">|</span>
 
           <Link
-            href={locale === "ar" ? "/en" : "/"}
+            href={targetPath}
             className="text-xs font-semibold hover:text-white transition-colors tracking-wide"
           >
             {t("language")}
