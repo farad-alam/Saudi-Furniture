@@ -60,7 +60,7 @@ export default async function ContactPage({
           {/* Form Placeholder */}
           <div className="glass-card p-8">
             <h3 className="font-bold text-xl mb-6">{isAr ? "أرسل لنا رسالة" : "Send us a message"}</h3>
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-4">
               <div>
                 <label className="form-label">{isAr ? "الاسم" : "Name"}</label>
                 <input type="text" className="form-input" placeholder={isAr ? "الاسم الكامل" : "Full Name"} />
