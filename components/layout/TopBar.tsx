@@ -13,10 +13,14 @@ export default function TopBar({ locale }: { locale: string }) {
   const searchParams = useSearchParams();
 
   let targetPath = pathname;
+  // Remove existing locale prefix (/en or /ar)
+  const pathWithoutLocale = pathname.replace(/^\/(en|ar)(\/|$)/, '/');
+  const cleanPath = pathWithoutLocale === "//" ? "/" : pathWithoutLocale;
+
   if (locale === "en") {
-    targetPath = pathname.replace(/^\/en/, "") || "/";
+    targetPath = cleanPath;
   } else {
-    targetPath = `/en${pathname === "/" ? "" : pathname}`;
+    targetPath = `/en${cleanPath === "/" ? "" : cleanPath}`;
   }
   
   const searchString = searchParams.toString();
